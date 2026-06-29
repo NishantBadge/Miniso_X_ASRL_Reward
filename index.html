@@ -150,6 +150,33 @@
 
   input::placeholder { color: #C0C5CC; }
 
+  select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.15s;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  select:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(230,51,41,0.1);
+  }
+
+  select option[value=""] { color: #C0C5CC; }
+
   .btn {
     width: 100%;
     padding: 13px;
@@ -262,10 +289,28 @@
     <!-- LOGIN -->
     <div id="login-section">
       <p class="section-title">Store Login</p>
-      <div class="toast error" id="login-error">Incorrect Store ID or password. Try again.</div>
+      <div class="toast error" id="login-error">Incorrect password for this store. Try again.</div>
       <div class="field">
-        <label for="store-id">Store ID</label>
-        <input type="text" id="store-id" placeholder="e.g. INI5" autocomplete="off" autocapitalize="characters"/>
+        <label for="store-select">Select Your Store</label>
+        <select id="store-select">
+          <option value="">— Choose store —</option>
+          <option value="INI5">Shimla</option>
+          <option value="IN9V">Dehradun</option>
+          <option value="INV6">Mussoorie</option>
+          <option value="INAJ">Goa</option>
+          <option value="ING9">Jalandhar</option>
+          <option value="INI8">Bhopal</option>
+          <option value="INL8">Borivali</option>
+          <option value="INJ7">Surat Adajan</option>
+          <option value="INS2">Vesu</option>
+          <option value="INZ2">Hyderabad Lulu</option>
+          <option value="INK2">Jammu</option>
+          <option value="INBK">Haldwani</option>
+          <option value="INH7">Indore</option>
+          <option value="INAH">Bathinda</option>
+          <option value="INFJ">Curo Mall</option>
+          <option value="INBT">Patiala</option>
+        </select>
       </div>
       <div class="field">
         <label for="password">Password</label>
@@ -339,12 +384,19 @@ const STORES = [
 let currentStore = null;
 
 function doLogin() {
-  const id  = document.getElementById("store-id").value.trim().toUpperCase();
+  const id  = document.getElementById("store-select").value;
   const pwd = document.getElementById("password").value.trim();
   const errEl = document.getElementById("login-error");
 
+  if (!id) {
+    errEl.textContent = "Please select your store first.";
+    errEl.style.display = "block";
+    return;
+  }
+
   const match = STORES.find(s => s.id === id && s.password === pwd);
   if (!match) {
+    errEl.textContent = "Incorrect password for this store. Try again.";
     errEl.style.display = "block";
     return;
   }
@@ -366,7 +418,7 @@ function doLogout() {
   currentStore = null;
   document.getElementById("login-section").style.display = "block";
   document.getElementById("form-section").style.display  = "none";
-  document.getElementById("store-id").value = "";
+  document.getElementById("store-select").value = "";
   document.getElementById("password").value = "";
   document.getElementById("header-subtitle").textContent = "Log in to start adding customers";
   document.getElementById("store-badge").style.display = "none";

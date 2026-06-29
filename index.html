@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ASRL — Customer Data Entry</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #F7F8FA;
+    --card: #FFFFFF;
+    --brand: #E63329;
+    --brand-dark: #C0271E;
+    --brand-light: #FDF1F0;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --success: #16A34A;
+    --success-bg: #F0FDF4;
+    --error: #DC2626;
+    --error-bg: #FEF2F2;
+    --input-focus: #E63329;
+    --radius: 10px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    color: var(--text);
+  }
+
+  .logo-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .logo-dot {
+    width: 36px; height: 36px;
+    background: var(--brand);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+
+  .logo-text span { color: var(--brand); }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: var(--brand);
+    padding: 22px 28px;
+    color: #fff;
+  }
+
+  .card-header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  .card-header p {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+
+  .store-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  .card-body {
+    padding: 28px;
+  }
+
+  /* LOGIN SECTION */
+  #login-section .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 18px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  input:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(230,51,41,0.1);
+  }
+
+  input::placeholder { color: #C0C5CC; }
+
+  .btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 6px;
+  }
+
+  .btn:hover { background: var(--brand-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { background: #D1D5DB; cursor: not-allowed; transform: none; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--brand);
+    border: 1.5px solid var(--brand);
+    margin-top: 10px;
+  }
+  .btn-outline:hover { background: var(--brand-light); }
+
+  /* FORM SECTION */
+  #form-section { display: none; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* TOAST / STATUS */
+  .toast {
+    display: none;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13.5px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  .toast.success {
+    background: var(--success-bg);
+    border: 1px solid #BBF7D0;
+    color: var(--success);
+  }
+
+  .toast.error {
+    background: var(--error-bg);
+    border: 1px solid #FECACA;
+    color: var(--error);
+  }
+
+  .toast .bill-highlight {
+    font-weight: 700;
+    font-size: 15px;
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* LOADER */
+  .btn .spinner {
+    display: none;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 20px;
+    line-height: 1.6;
+  }
+
+  /* MOBILE */
+  @media (max-width: 480px) {
+    .card-body { padding: 22px 20px; }
+    .card-header { padding: 18px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="logo-bar">
+  <div class="logo-dot">M</div>
+  <div class="logo-text">ASRL <span>× Miniso</span></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h1>Customer Data Entry</h1>
+    <p id="header-subtitle">Log in to start adding customers</p>
+    <span class="store-badge" id="store-badge" style="display:none"></span>
+  </div>
+
+  <div class="card-body">
+
+    <!-- LOGIN -->
+    <div id="login-section">
+      <p class="section-title">Store Login</p>
+      <div class="toast error" id="login-error">Incorrect Store ID or password. Try again.</div>
+      <div class="field">
+        <label for="store-id">Store ID</label>
+        <input type="text" id="store-id" placeholder="e.g. INI5" autocomplete="off" autocapitalize="characters"/>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password"/>
+      </div>
+      <button class="btn" id="login-btn" onclick="doLogin()">Log In</button>
+    </div>
+
+    <!-- ENTRY FORM -->
+    <div id="form-section">
+      <div class="toast success" id="success-toast"></div>
+      <div class="toast error" id="submit-error"></div>
+
+      <div class="field">
+        <label for="bill-no">Bill Number</label>
+        <input type="text" id="bill-no" placeholder="e.g. 10045" autocomplete="off"/>
+      </div>
+      <div class="field">
+        <label for="phone">Customer Phone</label>
+        <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10" autocomplete="off"/>
+      </div>
+      <div class="field">
+        <label for="cust-name">Customer Name</label>
+        <input type="text" id="cust-name" placeholder="Full name" autocomplete="off"/>
+      </div>
+
+      <button class="btn" id="submit-btn" onclick="submitEntry()">
+        <span id="btn-text">Save Customer</span>
+        <span class="spinner" id="btn-spinner"></span>
+      </button>
+
+      <div class="divider"></div>
+      <button class="btn btn-outline" onclick="doLogout()">Log Out</button>
+    </div>
+
+  </div>
+</div>
+
+<p class="footer-note">Data goes directly to the ASRL Google Sheet.<br/>Entries cannot be viewed from this page.</p>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIGURATION — Edit these values
+// ─────────────────────────────────────────────
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvwUSTCq2ddnFSSycHTuIbuDCuolCrubm4z-YDdJynmtmMMH4Wu8YmP2wUzIsL6XqZ/exec";
+
+// Store credentials: { storeCode, storeName, password }
+const STORES = [
+  { id: "INI5",  name: "Shimla",          password: "shimla@2026"    },
+  { id: "IN9V",  name: "Dehradun",        password: "dehradun@2026"  },
+  { id: "INV6",  name: "Mussoorie",       password: "mussoorie@2026" },
+  { id: "INAJ",  name: "Goa",             password: "goa@2026"       },
+  { id: "ING9",  name: "Jalandhar",       password: "jalandhar@2026" },
+  { id: "INI8",  name: "Bhopal",          password: "bhopal@2026"    },
+  { id: "INL8",  name: "Borivali",        password: "borivali@2026"  },
+  { id: "INJ7",  name: "Surat Adajan",    password: "suratadajan@2026"},
+  { id: "INS2",  name: "Vesu",            password: "vesu@2026"      },
+  { id: "INZ2",  name: "Hyderabad Lulu",  password: "hyderabad@2026" },
+  { id: "INK2",  name: "Jammu",           password: "jammu@2026"     },
+  { id: "INBK",  name: "Haldwani",        password: "haldwani@2026"  },
+  { id: "INH7",  name: "Indore",          password: "indore@2026"    },
+  { id: "INAH",  name: "Bathinda",        password: "bathinda@2026"  },
+  { id: "INFJ",  name: "Curo Mall",       password: "curomall@2026"  },
+  { id: "INBT",  name: "Patiala",         password: "patiala@2026"   },
+];
+
+// ─────────────────────────────────────────────
+// SESSION STATE
+// ─────────────────────────────────────────────
+let currentStore = null;
+
+function doLogin() {
+  const id  = document.getElementById("store-id").value.trim().toUpperCase();
+  const pwd = document.getElementById("password").value.trim();
+  const errEl = document.getElementById("login-error");
+
+  const match = STORES.find(s => s.id === id && s.password === pwd);
+  if (!match) {
+    errEl.style.display = "block";
+    return;
+  }
+
+  errEl.style.display = "none";
+  currentStore = match;
+
+  // Update header
+  document.getElementById("header-subtitle").textContent = "Add a new customer below";
+  const badge = document.getElementById("store-badge");
+  badge.textContent = `${match.name} — ${match.id}`;
+  badge.style.display = "inline-block";
+
+  document.getElementById("login-section").style.display = "none";
+  document.getElementById("form-section").style.display  = "block";
+}
+
+function doLogout() {
+  currentStore = null;
+  document.getElementById("login-section").style.display = "block";
+  document.getElementById("form-section").style.display  = "none";
+  document.getElementById("store-id").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("header-subtitle").textContent = "Log in to start adding customers";
+  document.getElementById("store-badge").style.display = "none";
+  clearForm();
+  hideToasts();
+}
+
+function clearForm() {
+  ["bill-no","phone","cust-name"].forEach(id => document.getElementById(id).value = "");
+}
+
+function hideToasts() {
+  document.getElementById("success-toast").style.display = "none";
+  document.getElementById("submit-error").style.display  = "none";
+}
+
+async function submitEntry() {
+  hideToasts();
+
+  const billNo   = document.getElementById("bill-no").value.trim();
+  const phone    = document.getElementById("phone").value.trim();
+  const custName = document.getElementById("cust-name").value.trim();
+
+  // Basic validation
+  if (!billNo || !phone || !custName) {
+    showError("submit-error", "Please fill in all three fields.");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    showError("submit-error", "Phone number must be exactly 10 digits.");
+    return;
+  }
+
+  setLoading(true);
+
+  const payload = {
+    storeCode : currentStore.id,
+    storeName : currentStore.name,
+    billNo    : billNo,
+    phone     : phone,
+    custName  : custName,
+    timestamp : new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+  };
+
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method  : "POST",
+      headers : { "Content-Type": "text/plain" },
+      body    : JSON.stringify(payload)
+    });
+
+    const text = await res.text();
+    const data = JSON.parse(text);
+
+    if (data.status === "ok") {
+      const toast = document.getElementById("success-toast");
+      toast.innerHTML = `✅ Entry saved successfully!<span class="bill-highlight">Bill No: ${billNo}</span>`;
+      toast.style.display = "block";
+      clearForm();
+      document.getElementById("bill-no").focus();
+    } else {
+      showError("submit-error", "Server error: " + (data.message || "Unknown error."));
+    }
+  } catch (e) {
+    showError("submit-error", "Could not connect. Check internet and try again.");
+  }
+
+  setLoading(false);
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = "block";
+}
+
+function setLoading(state) {
+  const btn     = document.getElementById("submit-btn");
+  const txt     = document.getElementById("btn-text");
+  const spinner = document.getElementById("btn-spinner");
+  btn.disabled       = state;
+  txt.style.display  = state ? "none" : "inline";
+  spinner.style.display = state ? "block" : "none";
+}
+
+// Enter key on login
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    if (document.getElementById("login-section").style.display !== "none") doLogin();
+  }
+});
+</script>
+</body>
+</html>

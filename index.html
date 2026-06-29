@@ -20,7 +20,8 @@
     --success-bg: #F0FDF4;
     --error: #DC2626;
     --error-bg: #FEF2F2;
-    --input-focus: #E63329;
+    --coin: #D97706;
+    --coin-bg: #FFFBEB;
     --radius: 10px;
     --shadow: 0 2px 16px rgba(0,0,0,0.07);
   }
@@ -54,7 +55,6 @@
     color: #fff;
     font-weight: 700;
     font-size: 16px;
-    letter-spacing: -0.5px;
   }
 
   .logo-text {
@@ -63,7 +63,6 @@
     letter-spacing: -0.3px;
     color: var(--text);
   }
-
   .logo-text span { color: var(--brand); }
 
   .card {
@@ -71,7 +70,7 @@
     border-radius: 16px;
     box-shadow: var(--shadow);
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     overflow: hidden;
   }
 
@@ -80,21 +79,11 @@
     padding: 22px 28px;
     color: #fff;
   }
-
-  .card-header h1 {
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
-  }
-
-  .card-header p {
-    font-size: 13px;
-    opacity: 0.85;
-    margin-top: 4px;
-  }
+  .card-header h1 { font-size: 17px; font-weight: 600; }
+  .card-header p  { font-size: 13px; opacity: 0.85; margin-top: 4px; }
 
   .store-badge {
-    display: inline-block;
+    display: none;
     background: rgba(255,255,255,0.2);
     border-radius: 20px;
     padding: 3px 10px;
@@ -104,23 +93,48 @@
     letter-spacing: 0.3px;
   }
 
-  .card-body {
-    padding: 28px;
+  /* TABS */
+  .tab-bar {
+    display: flex;
+    border-bottom: 1.5px solid var(--border);
+    background: #fff;
   }
 
-  /* LOGIN SECTION */
+  .tab-btn {
+    flex: 1;
+    padding: 13px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2.5px solid transparent;
+    margin-bottom: -1.5px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .tab-btn.active {
+    color: var(--brand);
+    border-bottom-color: var(--brand);
+  }
+
+  .tab-btn:hover:not(.active) { color: var(--text); }
+
+  .card-body { padding: 24px 28px; }
+
+  /* LOGIN */
   #login-section .section-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.6px;
-    margin-bottom: 18px;
-  }
-
-  .field {
     margin-bottom: 16px;
   }
+
+  .field { margin-bottom: 15px; }
 
   label {
     display: block;
@@ -144,7 +158,7 @@
   }
 
   input:focus {
-    border-color: var(--input-focus);
+    border-color: var(--brand);
     box-shadow: 0 0 0 3px rgba(230,51,41,0.1);
   }
 
@@ -158,24 +172,19 @@
     font-size: 14px;
     font-family: inherit;
     color: var(--text);
-    background: #fff;
-    transition: border-color 0.15s;
-    outline: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+    padding-right: 36px;
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
+    outline: none;
     cursor: pointer;
+    transition: border-color 0.15s;
   }
 
   select:focus {
-    border-color: var(--input-focus);
+    border-color: var(--brand);
     box-shadow: 0 0 0 3px rgba(230,51,41,0.1);
   }
-
-  select option[value=""] { color: #C0C5CC; }
 
   .btn {
     width: 100%;
@@ -190,6 +199,10 @@
     font-family: inherit;
     transition: background 0.15s, transform 0.1s;
     margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .btn:hover { background: var(--brand-dark); }
@@ -204,56 +217,140 @@
   }
   .btn-outline:hover { background: var(--brand-light); }
 
-  /* FORM SECTION */
-  #form-section { display: none; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
 
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 20px 0;
-  }
-
-  /* TOAST / STATUS */
+  /* TOAST */
   .toast {
     display: none;
     border-radius: var(--radius);
-    padding: 14px 16px;
+    padding: 13px 15px;
     font-size: 13.5px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     line-height: 1.5;
   }
+  .toast.success { background: var(--success-bg); border: 1px solid #BBF7D0; color: var(--success); }
+  .toast.error   { background: var(--error-bg);   border: 1px solid #FECACA; color: var(--error);   }
+  .toast .bill-highlight { font-weight: 700; font-size: 15px; display: block; margin-top: 3px; }
 
-  .toast.success {
-    background: var(--success-bg);
-    border: 1px solid #BBF7D0;
-    color: var(--success);
-  }
-
-  .toast.error {
-    background: var(--error-bg);
-    border: 1px solid #FECACA;
-    color: var(--error);
-  }
-
-  .toast .bill-highlight {
-    font-weight: 700;
-    font-size: 15px;
-    display: block;
-    margin-top: 3px;
-  }
-
-  /* LOADER */
-  .btn .spinner {
+  /* SPINNER */
+  .spinner {
     display: none;
     width: 16px; height: 16px;
     border: 2px solid rgba(255,255,255,0.4);
     border-top-color: #fff;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
-    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SEARCH INPUT ROW */
+  .search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .search-row input { margin: 0; }
+  .search-row .btn {
+    width: auto;
+    padding: 11px 16px;
+    margin: 0;
+    flex-shrink: 0;
+    font-size: 13px;
   }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+  /* CUSTOMER RESULT CARD */
+  .result-box {
+    display: none;
+  }
+
+  .cust-header {
+    background: var(--brand-light);
+    border: 1px solid #FECACA;
+    border-radius: var(--radius);
+    padding: 13px 15px;
+    margin-bottom: 14px;
+  }
+
+  .cust-header .cust-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--brand-dark);
+  }
+
+  .cust-header .cust-phone {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .visits-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .bill-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 7px;
+    background: #fff;
+  }
+
+  .bill-row .bill-info { flex: 1; }
+  .bill-row .bill-num  { font-size: 13px; font-weight: 600; color: var(--text); }
+  .bill-row .bill-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .bill-row .bill-amt  { font-size: 13px; font-weight: 600; color: var(--text); margin-right: 12px; }
+
+  .coin-badge {
+    background: var(--coin-bg);
+    border: 1px solid #FDE68A;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--coin);
+    white-space: nowrap;
+  }
+
+  .total-coins-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--coin-bg);
+    border: 1.5px solid #FDE68A;
+    border-radius: var(--radius);
+    padding: 13px 15px;
+    margin-top: 12px;
+  }
+
+  .total-coins-bar .label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--coin);
+  }
+
+  .total-coins-bar .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--coin);
+  }
+
+  .no-result {
+    text-align: center;
+    padding: 28px 0;
+    color: var(--muted);
+    font-size: 13.5px;
+    display: none;
+  }
+
+  .no-result .icon { font-size: 28px; display: block; margin-bottom: 8px; }
 
   .footer-note {
     text-align: center;
@@ -263,9 +360,8 @@
     line-height: 1.6;
   }
 
-  /* MOBILE */
   @media (max-width: 480px) {
-    .card-body { padding: 22px 20px; }
+    .card-body { padding: 20px 18px; }
     .card-header { padding: 18px 20px; }
   }
 </style>
@@ -279,17 +375,17 @@
 
 <div class="card">
   <div class="card-header">
-    <h1>Customer Data Entry</h1>
-    <p id="header-subtitle">Log in to start adding customers</p>
-    <span class="store-badge" id="store-badge" style="display:none"></span>
+    <h1>Customer Portal</h1>
+    <p id="header-subtitle">Log in to manage customers</p>
+    <span class="store-badge" id="store-badge"></span>
   </div>
 
   <div class="card-body">
 
-    <!-- LOGIN -->
+    <!-- ── LOGIN ── -->
     <div id="login-section">
       <p class="section-title">Store Login</p>
-      <div class="toast error" id="login-error">Incorrect password for this store. Try again.</div>
+      <div class="toast error" id="login-error"></div>
       <div class="field">
         <label for="store-select">Select Your Store</label>
         <select id="store-select">
@@ -316,31 +412,77 @@
         <label for="password">Password</label>
         <input type="password" id="password" placeholder="Enter password"/>
       </div>
-      <button class="btn" id="login-btn" onclick="doLogin()">Log In</button>
+      <button class="btn" onclick="doLogin()">Log In</button>
     </div>
 
-    <!-- ENTRY FORM -->
-    <div id="form-section">
-      <div class="toast success" id="success-toast"></div>
-      <div class="toast error" id="submit-error"></div>
+    <!-- ── LOGGED-IN VIEW ── -->
+    <div id="main-section" style="display:none">
 
-      <div class="field">
-        <label for="bill-no">Bill Number</label>
-        <input type="text" id="bill-no" placeholder="e.g. 10045" autocomplete="off"/>
-      </div>
-      <div class="field">
-        <label for="phone">Customer Phone</label>
-        <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10" autocomplete="off"/>
-      </div>
-      <div class="field">
-        <label for="cust-name">Customer Name</label>
-        <input type="text" id="cust-name" placeholder="Full name" autocomplete="off"/>
+      <!-- Tab bar -->
+      <div class="tab-bar" style="margin: -24px -28px 22px;">
+        <button class="tab-btn active" id="tab-add"    onclick="switchTab('add')">➕ Add Customer</button>
+        <button class="tab-btn"        id="tab-search" onclick="switchTab('search')">🔍 Search Customer</button>
       </div>
 
-      <button class="btn" id="submit-btn" onclick="submitEntry()">
-        <span id="btn-text">Save Customer</span>
-        <span class="spinner" id="btn-spinner"></span>
-      </button>
+      <!-- ADD TAB -->
+      <div id="panel-add">
+        <div class="toast success" id="success-toast"></div>
+        <div class="toast error"   id="submit-error"></div>
+
+        <div class="field">
+          <label for="bill-no">Bill Number</label>
+          <input type="text" id="bill-no" placeholder="e.g. 10045" autocomplete="off"/>
+        </div>
+        <div class="field">
+          <label for="phone-add">Customer Phone</label>
+          <input type="tel" id="phone-add" placeholder="10-digit mobile number" maxlength="10" autocomplete="off"/>
+        </div>
+        <div class="field">
+          <label for="cust-name">Customer Name</label>
+          <input type="text" id="cust-name" placeholder="Full name" autocomplete="off"/>
+        </div>
+
+        <button class="btn" id="submit-btn" onclick="submitEntry()">
+          <span id="btn-text">Save Customer</span>
+          <span class="spinner" id="btn-spinner"></span>
+        </button>
+      </div>
+
+      <!-- SEARCH TAB -->
+      <div id="panel-search" style="display:none">
+        <div class="toast error" id="search-error"></div>
+
+        <label for="phone-search">Search by Phone Number</label>
+        <div class="search-row" style="margin-top:6px">
+          <input type="tel" id="phone-search" placeholder="10-digit number" maxlength="10" autocomplete="off"/>
+          <button class="btn" id="search-btn" onclick="doSearch()">
+            <span id="search-btn-text">Search</span>
+            <span class="spinner" id="search-spinner" style="border-top-color:#fff"></span>
+          </button>
+        </div>
+
+        <!-- No result -->
+        <div class="no-result" id="no-result">
+          <span class="icon">🔍</span>
+          No records found for this number at <strong id="no-result-store"></strong>.
+        </div>
+
+        <!-- Results -->
+        <div class="result-box" id="result-box">
+          <div class="cust-header">
+            <div class="cust-name" id="res-name"></div>
+            <div class="cust-phone" id="res-phone"></div>
+          </div>
+
+          <div class="visits-label" id="res-visits-label"></div>
+          <div id="res-bills"></div>
+
+          <div class="total-coins-bar">
+            <span class="label">🪙 Total Redeem Coins</span>
+            <span class="value" id="res-total-coins">0</span>
+          </div>
+        </div>
+      </div>
 
       <div class="divider"></div>
       <button class="btn btn-outline" onclick="doLogout()">Log Out</button>
@@ -349,166 +491,235 @@
   </div>
 </div>
 
-<p class="footer-note">Data goes directly to the ASRL Google Sheet.<br/>Entries cannot be viewed from this page.</p>
+<p class="footer-note">Data goes directly to the ASRL Google Sheet.<br/>Entries cannot be viewed from the Add tab.</p>
 
 <script>
 // ─────────────────────────────────────────────
-// CONFIGURATION — Edit these values
+// CONFIG
 // ─────────────────────────────────────────────
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdac02ZlTgq6J54xi1gjClRMuyo1r_EDx_gcYXHMXIi_25XwkmcccZcYzBR3nRiS_V/exec";
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvwUSTCq2ddnFSSycHTuIbuDCuolCrubm4z-YDdJynmtmMMH4Wu8YmP2wUzIsL6XqZ/exec";
-
-// Store credentials: { storeCode, storeName, password }
 const STORES = [
-  { id: "INI5",  name: "Shimla",          password: "shimla@2026"    },
-  { id: "IN9V",  name: "Dehradun",        password: "dehradun@2026"  },
-  { id: "INV6",  name: "Mussoorie",       password: "mussoorie@2026" },
-  { id: "INAJ",  name: "Goa",             password: "goa@2026"       },
-  { id: "ING9",  name: "Jalandhar",       password: "jalandhar@2026" },
-  { id: "INI8",  name: "Bhopal",          password: "bhopal@2026"    },
-  { id: "INL8",  name: "Borivali",        password: "borivali@2026"  },
+  { id: "INI5",  name: "Shimla",          password: "shimla@2026"     },
+  { id: "IN9V",  name: "Dehradun",        password: "dehradun@2026"   },
+  { id: "INV6",  name: "Mussoorie",       password: "mussoorie@2026"  },
+  { id: "INAJ",  name: "Goa",             password: "goa@2026"        },
+  { id: "ING9",  name: "Jalandhar",       password: "jalandhar@2026"  },
+  { id: "INI8",  name: "Bhopal",          password: "bhopal@2026"     },
+  { id: "INL8",  name: "Borivali",        password: "borivali@2026"   },
   { id: "INJ7",  name: "Surat Adajan",    password: "suratadajan@2026"},
-  { id: "INS2",  name: "Vesu",            password: "vesu@2026"      },
-  { id: "INZ2",  name: "Hyderabad Lulu",  password: "hyderabad@2026" },
-  { id: "INK2",  name: "Jammu",           password: "jammu@2026"     },
-  { id: "INBK",  name: "Haldwani",        password: "haldwani@2026"  },
-  { id: "INH7",  name: "Indore",          password: "indore@2026"    },
-  { id: "INAH",  name: "Bathinda",        password: "bathinda@2026"  },
-  { id: "INFJ",  name: "Curo Mall",       password: "curomall@2026"  },
-  { id: "INBT",  name: "Patiala",         password: "patiala@2026"   },
+  { id: "INS2",  name: "Vesu",            password: "vesu@2026"       },
+  { id: "INZ2",  name: "Hyderabad Lulu",  password: "hyderabad@2026"  },
+  { id: "INK2",  name: "Jammu",           password: "jammu@2026"      },
+  { id: "INBK",  name: "Haldwani",        password: "haldwani@2026"   },
+  { id: "INH7",  name: "Indore",          password: "indore@2026"     },
+  { id: "INAH",  name: "Bathinda",        password: "bathinda@2026"   },
+  { id: "INFJ",  name: "Curo Mall",       password: "curomall@2026"   },
+  { id: "INBT",  name: "Patiala",         password: "patiala@2026"    },
 ];
 
-// ─────────────────────────────────────────────
-// SESSION STATE
-// ─────────────────────────────────────────────
 let currentStore = null;
 
+// ─────────────────────────────────────────────
+// LOGIN / LOGOUT
+// ─────────────────────────────────────────────
 function doLogin() {
   const id  = document.getElementById("store-select").value;
   const pwd = document.getElementById("password").value.trim();
-  const errEl = document.getElementById("login-error");
+  const err = document.getElementById("login-error");
 
-  if (!id) {
-    errEl.textContent = "Please select your store first.";
-    errEl.style.display = "block";
-    return;
-  }
-
+  if (!id) { showToast("login-error", "Please select your store first."); return; }
   const match = STORES.find(s => s.id === id && s.password === pwd);
-  if (!match) {
-    errEl.textContent = "Incorrect password for this store. Try again.";
-    errEl.style.display = "block";
-    return;
-  }
+  if (!match) { showToast("login-error", "Incorrect password. Try again."); return; }
 
-  errEl.style.display = "none";
+  err.style.display = "none";
   currentStore = match;
 
-  // Update header
-  document.getElementById("header-subtitle").textContent = "Add a new customer below";
+  document.getElementById("header-subtitle").textContent = match.name + " — " + match.id;
   const badge = document.getElementById("store-badge");
-  badge.textContent = `${match.name} — ${match.id}`;
+  badge.textContent = match.name + " — " + match.id;
   badge.style.display = "inline-block";
 
   document.getElementById("login-section").style.display = "none";
-  document.getElementById("form-section").style.display  = "block";
+  document.getElementById("main-section").style.display  = "block";
 }
 
 function doLogout() {
   currentStore = null;
   document.getElementById("login-section").style.display = "block";
-  document.getElementById("form-section").style.display  = "none";
+  document.getElementById("main-section").style.display  = "none";
   document.getElementById("store-select").value = "";
-  document.getElementById("password").value = "";
-  document.getElementById("header-subtitle").textContent = "Log in to start adding customers";
+  document.getElementById("password").value     = "";
+  document.getElementById("header-subtitle").textContent = "Log in to manage customers";
   document.getElementById("store-badge").style.display = "none";
-  clearForm();
-  hideToasts();
+  clearAddForm();
+  clearSearch();
+  hideAllToasts();
+  switchTab("add");
 }
 
-function clearForm() {
-  ["bill-no","phone","cust-name"].forEach(id => document.getElementById(id).value = "");
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById("panel-add").style.display    = tab === "add"    ? "block" : "none";
+  document.getElementById("panel-search").style.display = tab === "search" ? "block" : "none";
+  document.getElementById("tab-add").classList.toggle("active",    tab === "add");
+  document.getElementById("tab-search").classList.toggle("active", tab === "search");
 }
 
-function hideToasts() {
-  document.getElementById("success-toast").style.display = "none";
-  document.getElementById("submit-error").style.display  = "none";
-}
-
+// ─────────────────────────────────────────────
+// ADD CUSTOMER
+// ─────────────────────────────────────────────
 async function submitEntry() {
-  hideToasts();
-
+  hideAllToasts();
   const billNo   = document.getElementById("bill-no").value.trim();
-  const phone    = document.getElementById("phone").value.trim();
+  const phone    = document.getElementById("phone-add").value.trim();
   const custName = document.getElementById("cust-name").value.trim();
 
-  // Basic validation
-  if (!billNo || !phone || !custName) {
-    showError("submit-error", "Please fill in all three fields.");
-    return;
-  }
-  if (!/^\d{10}$/.test(phone)) {
-    showError("submit-error", "Phone number must be exactly 10 digits.");
-    return;
-  }
+  if (!billNo || !phone || !custName) { showToast("submit-error", "Please fill in all three fields."); return; }
+  if (!/^\d{10}$/.test(phone))        { showToast("submit-error", "Phone must be exactly 10 digits."); return; }
 
-  setLoading(true);
-
-  const payload = {
-    storeCode : currentStore.id,
-    storeName : currentStore.name,
-    billNo    : billNo,
-    phone     : phone,
-    custName  : custName,
-    timestamp : new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
-  };
+  setAddLoading(true);
 
   try {
-    const res = await fetch(SCRIPT_URL, {
-      method  : "POST",
-      headers : { "Content-Type": "text/plain" },
-      body    : JSON.stringify(payload)
+    const res  = await fetch(SCRIPT_URL, {
+      method : "POST",
+      headers: { "Content-Type": "text/plain" },
+      body   : JSON.stringify({
+        action    : "add",
+        storeCode : currentStore.id,
+        storeName : currentStore.name,
+        billNo, phone, custName,
+        timestamp : new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+      })
     });
-
-    const text = await res.text();
-    const data = JSON.parse(text);
-
+    const data = JSON.parse(await res.text());
     if (data.status === "ok") {
-      const toast = document.getElementById("success-toast");
-      toast.innerHTML = `✅ Entry saved successfully!<span class="bill-highlight">Bill No: ${billNo}</span>`;
-      toast.style.display = "block";
-      clearForm();
+      const t = document.getElementById("success-toast");
+      t.innerHTML = '✅ Entry saved!<span class="bill-highlight">Bill No: ' + billNo + '</span>';
+      t.style.display = "block";
+      clearAddForm();
       document.getElementById("bill-no").focus();
     } else {
-      showError("submit-error", "Server error: " + (data.message || "Unknown error."));
+      showToast("submit-error", "Server error: " + (data.message || "Unknown"));
     }
-  } catch (e) {
-    showError("submit-error", "Could not connect. Check internet and try again.");
+  } catch(e) {
+    showToast("submit-error", "Could not connect. Check internet and try again.");
   }
-
-  setLoading(false);
+  setAddLoading(false);
 }
 
-function showError(id, msg) {
+function clearAddForm() {
+  ["bill-no","phone-add","cust-name"].forEach(id => document.getElementById(id).value = "");
+}
+
+function setAddLoading(on) {
+  document.getElementById("submit-btn").disabled       = on;
+  document.getElementById("btn-text").style.display    = on ? "none" : "inline";
+  document.getElementById("btn-spinner").style.display = on ? "inline-block" : "none";
+}
+
+// ─────────────────────────────────────────────
+// SEARCH CUSTOMER
+// ─────────────────────────────────────────────
+async function doSearch() {
+  document.getElementById("search-error").style.display = "none";
+  document.getElementById("result-box").style.display   = "none";
+  document.getElementById("no-result").style.display    = "none";
+
+  const phone = document.getElementById("phone-search").value.trim();
+  if (!/^\d{10}$/.test(phone)) {
+    showToast("search-error", "Enter a valid 10-digit phone number.");
+    return;
+  }
+
+  setSearchLoading(true);
+
+  try {
+    const url = SCRIPT_URL + "?action=search&storeCode=" + encodeURIComponent(currentStore.id) + "&phone=" + encodeURIComponent(phone);
+    const res  = await fetch(url);
+    const data = JSON.parse(await res.text());
+
+    if (data.status === "ok" && data.rows && data.rows.length > 0) {
+      renderResults(data.rows, phone);
+    } else {
+      document.getElementById("no-result-store").textContent = currentStore.name;
+      document.getElementById("no-result").style.display = "block";
+    }
+  } catch(e) {
+    showToast("search-error", "Could not connect. Check internet and try again.");
+  }
+
+  setSearchLoading(false);
+}
+
+function renderResults(rows, phone) {
+  // rows: [{billNo, timestamp, amount, coins, custName}]
+  const name = rows[0].custName || "—";
+  document.getElementById("res-name").textContent  = name;
+  document.getElementById("res-phone").textContent = "📱 " + phone + " · " + rows.length + " visit" + (rows.length > 1 ? "s" : "");
+  document.getElementById("res-visits-label").textContent = "Purchase History (" + currentStore.name + ")";
+
+  const billsDiv = document.getElementById("res-bills");
+  billsDiv.innerHTML = "";
+
+  let totalCoins = 0;
+
+  rows.forEach(r => {
+    const coins  = parseInt(r.coins) || 0;
+    totalCoins  += coins;
+    const amt    = r.amount ? "₹" + r.amount : "—";
+    const date   = r.timestamp || "—";
+
+    const row = document.createElement("div");
+    row.className = "bill-row";
+    row.innerHTML =
+      '<div class="bill-info">' +
+        '<div class="bill-num">Bill #' + (r.billNo || "—") + '</div>' +
+        '<div class="bill-date">' + date + '</div>' +
+      '</div>' +
+      '<div class="bill-amt">' + amt + '</div>' +
+      '<span class="coin-badge">🪙 ' + coins + '</span>';
+    billsDiv.appendChild(row);
+  });
+
+  document.getElementById("res-total-coins").textContent = totalCoins;
+  document.getElementById("result-box").style.display = "block";
+}
+
+function clearSearch() {
+  document.getElementById("phone-search").value         = "";
+  document.getElementById("result-box").style.display   = "none";
+  document.getElementById("no-result").style.display    = "none";
+  document.getElementById("search-error").style.display = "none";
+}
+
+function setSearchLoading(on) {
+  document.getElementById("search-btn").disabled             = on;
+  document.getElementById("search-btn-text").style.display   = on ? "none" : "inline";
+  document.getElementById("search-spinner").style.display    = on ? "inline-block" : "none";
+}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function showToast(id, msg) {
   const el = document.getElementById(id);
-  el.textContent = msg;
+  el.textContent   = msg;
   el.style.display = "block";
 }
 
-function setLoading(state) {
-  const btn     = document.getElementById("submit-btn");
-  const txt     = document.getElementById("btn-text");
-  const spinner = document.getElementById("btn-spinner");
-  btn.disabled       = state;
-  txt.style.display  = state ? "none" : "inline";
-  spinner.style.display = state ? "block" : "none";
+function hideAllToasts() {
+  ["login-error","submit-error","success-toast","search-error"]
+    .forEach(id => document.getElementById(id).style.display = "none");
 }
 
-// Enter key on login
+// Enter key
 document.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    if (document.getElementById("login-section").style.display !== "none") doLogin();
-  }
+  if (e.key !== "Enter") return;
+  if (document.getElementById("login-section").style.display !== "none") { doLogin(); return; }
+  if (document.getElementById("panel-search").style.display !== "none") { doSearch(); }
 });
 </script>
 </body>

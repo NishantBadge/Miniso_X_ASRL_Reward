@@ -430,18 +430,36 @@
         <div class="toast error"   id="submit-error"></div>
 
         <div class="field">
-          <label for="bill-no">Bill Number</label>
-          <input type="text" id="bill-no" placeholder="e.g. 10045" autocomplete="off"/>
+          <label for="bill-seq">Bill Number</label>
+          <div style="display:flex; align-items:center; gap:0;">
+            <div id="bill-prefix" style="
+              padding: 11px 13px;
+              background: #F3F4F6;
+              border: 1.5px solid var(--border);
+              border-right: none;
+              border-radius: var(--radius) 0 0 var(--radius);
+              font-size: 14px;
+              font-weight: 600;
+              color: var(--muted);
+              white-space: nowrap;
+              letter-spacing: 0.5px;
+            "></div>
+            <input type="number" id="bill-seq"
+              placeholder="001"
+              min="1" max="999"
+              autocomplete="off"
+              oninput="this.value=this.value.slice(0,3)"
+              style="border-radius: 0 var(--radius) var(--radius) 0; border-left: none; flex:1;"
+            />
+          </div>
+          <div style="font-size:11px; color:var(--muted); margin-top:5px;">
+            Full bill: <strong id="bill-preview" style="color:var(--text);">—</strong>
+          </div>
         </div>
         <div class="field">
           <label for="phone-add">Customer Phone</label>
           <input type="tel" id="phone-add" placeholder="10-digit mobile number" maxlength="10" autocomplete="off"/>
         </div>
-        <div class="field">
-          <label for="cust-name">Customer Name</label>
-          <input type="text" id="cust-name" placeholder="Full name" autocomplete="off"/>
-        </div>
-
         <button class="btn" id="submit-btn" onclick="submitEntry()">
           <span id="btn-text">Save Customer</span>
           <span class="spinner" id="btn-spinner"></span>
@@ -542,6 +560,13 @@ function doLogin() {
 
   document.getElementById("login-section").style.display = "none";
   document.getElementById("main-section").style.display  = "block";
+
+  // Set today's date prefix for bill number
+  const prefix = getTodayPrefix();
+  document.getElementById("bill-prefix").textContent = prefix;
+
+  // Live preview on typing
+  document.getElementById("bill-seq").addEventListener("input", updateBillPreview);
 }
 
 function doLogout() {
@@ -573,12 +598,15 @@ function switchTab(tab) {
 // ─────────────────────────────────────────────
 async function submitEntry() {
   hideAllToasts();
-  const billNo   = document.getElementById("bill-no").value.trim();
-  const phone    = document.getElementById("phone-add").value.trim();
-  const custName = document.getElementById("cust-name").value.trim();
+  const seq   = document.getElementById("bill-seq").value.trim();
+  const phone = document.getElementById("phone-add").value.trim();
 
-  if (!billNo || !phone || !custName) { showToast("submit-error", "Please fill in all three fields."); return; }
-  if (!/^\d{10}$/.test(phone))        { showToast("submit-error", "Phone must be exactly 10 digits."); return; }
+  if (!seq || !phone) { showToast("submit-error", "Please fill in both fields."); return; }
+  if (!/^\d{1,3}$/.test(seq))  { showToast("submit-error", "Bill sequence must be 1–3 digits (e.g. 001)."); return; }
+  if (!/^\d{10}$/.test(phone)) { showToast("submit-error", "Phone must be exactly 10 digits."); return; }
+
+  const prefix = document.getElementById("bill-prefix").textContent;
+  const billNo = prefix + seq.padStart(3, "0");
 
   setAddLoading(true);
 
@@ -590,7 +618,7 @@ async function submitEntry() {
         action    : "add",
         storeCode : currentStore.id,
         storeName : currentStore.name,
-        billNo, phone, custName,
+        billNo, phone,
         timestamp : new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
       })
     });
@@ -600,7 +628,7 @@ async function submitEntry() {
       t.innerHTML = '✅ Entry saved!<span class="bill-highlight">Bill No: ' + billNo + '</span>';
       t.style.display = "block";
       clearAddForm();
-      document.getElementById("bill-no").focus();
+      document.getElementById("bill-seq").focus();
     } else {
       showToast("submit-error", "Server error: " + (data.message || "Unknown"));
     }
@@ -610,8 +638,27 @@ async function submitEntry() {
   setAddLoading(false);
 }
 
+function getTodayPrefix() {
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+  const y   = now.getFullYear();
+  const m   = String(now.getMonth() + 1).padStart(2, "0");
+  const d   = String(now.getDate()).padStart(2, "0");
+  return "" + y + m + d + "0";
+}
+
+function updateBillPreview() {
+  const seq = document.getElementById("bill-seq").value.trim();
+  const preview = document.getElementById("bill-preview");
+  const prefix  = document.getElementById("bill-prefix").textContent;
+  if (!seq) { preview.textContent = "—"; return; }
+  const padded = seq.padStart(3, "0");
+  preview.textContent = prefix + padded;
+}
+
 function clearAddForm() {
-  ["bill-no","phone-add","cust-name"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("bill-seq").value = "";
+  document.getElementById("bill-preview").textContent = "—";
+  document.getElementById("phone-add").value = "";
 }
 
 function setAddLoading(on) {
